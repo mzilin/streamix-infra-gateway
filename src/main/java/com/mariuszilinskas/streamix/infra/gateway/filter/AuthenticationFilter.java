@@ -1,6 +1,6 @@
 package com.mariuszilinskas.streamix.infra.gateway.filter;
 
-import com.mariuszilinskas.streamix.infra.gateway.config.AppProperties;
+import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
 import com.mariuszilinskas.streamix.infra.gateway.service.JwtService;
 import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;

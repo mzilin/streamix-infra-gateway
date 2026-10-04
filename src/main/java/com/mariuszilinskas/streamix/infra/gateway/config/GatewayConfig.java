@@ -1,9 +1,10 @@
 package com.mariuszilinskas.streamix.infra.gateway.config;
 
+import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
+import com.mariuszilinskas.streamix.infra.gateway.properties.FrontendProperties;
+import com.mariuszilinskas.streamix.infra.gateway.properties.SecurityProperties;
 import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.GatewayFilterSpec;
@@ -13,17 +14,15 @@ import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
 
 @Configuration
-@EnableConfigurationProperties(AppProperties.class)
 @RequiredArgsConstructor
 public class GatewayConfig {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String RESPONSE_TIME_HEADER = "X-Response-Time";
 
-    @Value("${app.frontendBaseUrl}")
-    private String frontendBaseUrl;
-
     private final AppProperties appProps;
+    private final SecurityProperties securityProperties;
+    private final FrontendProperties frontendProperties;
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
@@ -40,8 +39,8 @@ public class GatewayConfig {
     private void registerRootRoute(RouteLocatorBuilder.Builder routes) {
         routes.route(route -> route
                 .path("/")
-                .filters(filters -> filters.redirect(302, frontendBaseUrl))
-                .uri(frontendBaseUrl));
+                .filters(filters -> filters.redirect(302, frontendProperties.baseUrl()))
+                .uri(frontendProperties.baseUrl()));
     }
 
     private void registerServiceRoute(RouteLocatorBuilder.Builder routes, AppProperties.RouteDefinition route) {
@@ -57,7 +56,7 @@ public class GatewayConfig {
     }
 
     private String getClusterApiKey(String cluster) {
-        String apiKey = appProps.clusterKeys().get(cluster);
+        String apiKey = securityProperties.clusterKeys().get(cluster);
 
         if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException("Missing API key for cluster: " + cluster);

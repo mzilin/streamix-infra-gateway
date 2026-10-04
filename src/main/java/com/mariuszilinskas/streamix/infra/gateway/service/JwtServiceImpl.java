@@ -1,5 +1,6 @@
 package com.mariuszilinskas.streamix.infra.gateway.service;
 
+import com.mariuszilinskas.streamix.infra.gateway.properties.SecurityProperties;
 import com.mariuszilinskas.streamix.infra.gateway.exception.JwtTokenValidationException;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
 import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
@@ -9,7 +10,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
@@ -30,8 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${app.accessTokenSecret}")
-    private String accessTokenSecret;
+    private final SecurityProperties securityProps;
 
     @Override
     public Optional<JwtPayload> extractPayload(ServerWebExchange exchange) {
@@ -88,7 +87,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private SecretKey getAccessTokenSecret() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessTokenSecret));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(securityProps.accessTokenSecret()));
     }
 
 }

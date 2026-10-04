@@ -1,7 +1,7 @@
 package com.mariuszilinskas.streamix.infra.gateway.config;
 
+import com.mariuszilinskas.streamix.infra.gateway.properties.FrontendProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -16,13 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CorsConfig {
 
-    @Value("${app.allowedOrigins}")
-    private String allowedOriginsString;
+    private final FrontendProperties frontendProperties;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> allowedOrigins = Arrays.asList(allowedOriginsString.split(","));
+        List<String> allowedOrigins = Arrays.asList(frontendProperties.allowedOrigins().split(","));
 
         configuration.setAllowedOriginPatterns(allowedOrigins);
         configuration.setAllowedMethods(List.of("*"));

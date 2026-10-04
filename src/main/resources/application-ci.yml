@@ -1,30 +1,26 @@
-# Eureka configuration for CI
+# CI service discovery configuration
 eureka:
   client:
-    fetchRegistry: false
-    registerWithEureka: false
+    fetch-registry: false
+    register-with-eureka: false
 
-# Management configuration for CI
+# CI security configuration
+security:
+  access-token-secret: dummy-secret-key
+  cluster-keys:
+    AUTH: dummy-auth-key
+    USERS: dummy-users-key
+    MEDIA: dummy-media-key
+    DISCOVERY: dummy-discovery-key
+    STREAMING: dummy-streaming-key
+    BILLING: dummy-billing-key
+
+# CI observability configuration
 management:
-  opentelemetry:
-    tracing:
-      export:
-        otlp:
-          endpoint: http://localhost:4318/v1/traces
+  tracing:
+    export:
+      enabled: false
   otlp:
     metrics:
       export:
-        url: http://localhost:4318/v1/metrics
-
-# App configuration for CI
-app:
-  allowedOrigins: http://localhost:3000
-  accessTokenSecret: dummy-secret-key
-  frontendBaseUrl: http://localhost:3000
-  cluster-keys:
-    AUTH:      dummy-auth-key
-    USERS:     dummy-users-key
-    MEDIA:     dummy-media-key
-    DISCOVERY: dummy-discovery-key
-    STREAMING: dummy-streaming-key
-    BILLING:   dummy-billing-key
+        enabled: false

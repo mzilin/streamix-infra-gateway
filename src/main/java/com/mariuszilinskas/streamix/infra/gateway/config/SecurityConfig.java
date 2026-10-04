@@ -3,6 +3,7 @@ package com.mariuszilinskas.streamix.infra.gateway.config;
 import com.mariuszilinskas.streamix.infra.gateway.enums.UserRole;
 import com.mariuszilinskas.streamix.infra.gateway.filter.AuthenticationFilter;
 import com.mariuszilinskas.streamix.infra.gateway.filter.UserIdFilter;
+import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class SecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
     private final AuthenticationFilter authenticationFilter;
     private final UserIdFilter userIdFilter;
-    private final AppProperties appProps;
+    private final AppProperties appProperties;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
@@ -39,7 +40,7 @@ public class SecurityConfig {
     }
 
     private void configureAuthorization(ServerHttpSecurity.AuthorizeExchangeSpec authorization) {
-        var security = appProps.security();
+        var security = appProperties.security();
 
         authorization
                 .pathMatchers(HttpMethod.GET, toArray(security.publicGetPaths())).permitAll()
