@@ -1,6 +1,6 @@
 package com.mariuszilinskas.streamix.infra.gateway.filter;
 
-import com.mariuszilinskas.streamix.infra.gateway.config.AppProperties;
+import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
 import com.mariuszilinskas.streamix.infra.gateway.service.JwtService;
 import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
@@ -50,7 +50,7 @@ public class AuthenticationFilterTest {
                 List.of(),
                 List.of("/api/v1/account/admin/**")
         );
-        AppProperties appProps = new AppProperties(List.of(), java.util.Map.of(), security);
+        AppProperties appProps = new AppProperties(List.of(), security);
         filter = new AuthenticationFilter(jwtService, appProps);
     }
 
