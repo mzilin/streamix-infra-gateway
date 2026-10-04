@@ -1,24 +1,17 @@
-# Server properties
-server:
-  port: 8080
-
-# Information for the info endpoint
+# Application metadata
 info:
   app:
-    environment: DEV
+    environment: ${spring.profiles.active}
     name: ${spring.application.name}
-    description: API Gateway - Local Instance
+    description: Streamix API Gateway
 
-# Spring application properties
+# Spring application and infrastructure configuration
 spring:
   application:
     name: infra-gateway
-  profiles:
-    active: dev
   config:
     import:
       - optional:configserver:discovery://config-server
-      - optional:file:../env/dev.properties
       - classpath:gateway-routes.yml
   cloud:
     gateway:
@@ -29,17 +22,33 @@ spring:
               enabled: false
               lower-case-service-id: true
 
-# Eureka configuration
+# Service discovery configuration
 eureka:
   client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_DEFAULT_ZONE}
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: http://localhost:8761/eureka
   instance:
-    preferIpAddress: true
+    prefer-ip-address: true
 
-# Management properties
+# Security configuration
+security:
+  access-token-secret: ${ACCESS_TOKEN_SECRET}
+  cluster-keys:
+    AUTH: ${AUTH_CLUSTER_KEY}
+    USERS: ${USERS_CLUSTER_KEY}
+    MEDIA: ${MEDIA_CLUSTER_KEY}
+    DISCOVERY: ${DISCOVERY_CLUSTER_KEY}
+    STREAMING: ${STREAMING_CLUSTER_KEY}
+    BILLING: ${BILLING_CLUSTER_KEY}
+
+# Frontend configuration
+frontend:
+  base-url: http://localhost:3077
+  allowed-origins: http://localhost:3077
+
+# Actuator and observability configuration
 management:
   info:
     env:
@@ -50,7 +59,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: info, health, refresh, gateway, prometheus
+        include: info, health, gateway, prometheus
   opentelemetry:
     resource-attributes:
       service.name: ${spring.application.name}
@@ -59,32 +68,17 @@ management:
     tracing:
       export:
         otlp:
-          endpoint: ${OTEL_TRACES_ENDPOINT}
+          endpoint: http://localhost:4318/v1/traces
   otlp:
     metrics:
       export:
-        url: ${OTEL_METRICS_ENDPOINT}
-
-app:
-  allowedOrigins: ${ALLOWED_ORIGINS}
-  accessTokenSecret: ${ACCESS_TOKEN_SECRET}
-  frontendBaseUrl: ${FRONTEND_BASE_URL}
-  cluster-keys:
-    AUTH: ${AUTH_CLUSTER_KEY}
-    USERS: ${USERS_CLUSTER_KEY}
-    MEDIA: ${MEDIA_CLUSTER_KEY}
-    DISCOVERY: ${DISCOVERY_CLUSTER_KEY}
-    STREAMING: ${STREAMING_CLUSTER_KEY}
-    BILLING: ${BILLING_CLUSTER_KEY}
+        url: http://localhost:4318/v1/metrics
 
 # Logging properties
 logging:
-  structured:
-    format:
-      console: ecs
   level:
     root: INFO
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.springframework.cloud.gateway: INFO
-    com.mariuszilinskas: DEBUG
+    com.mariuszilinskas.streamix: INFO
