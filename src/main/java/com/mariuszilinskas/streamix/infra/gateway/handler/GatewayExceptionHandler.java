@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.infra.gateway.handlers;
+package com.mariuszilinskas.streamix.infra.gateway.handler;
 
 import com.mariuszilinskas.streamix.web.response.error.ErrorResponse;
 import com.mariuszilinskas.streamix.infra.gateway.exception.JwtTokenValidationException;
