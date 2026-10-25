@@ -5,7 +5,7 @@ server:
 # Application metadata
 info:
   app:
-    environment: ${spring.profiles.active}
+    environment: ${spring.profiles.active:default}
     name: ${spring.application.name}
     description: Streamix API Gateway
 
@@ -13,6 +13,8 @@ info:
 spring:
   application:
     name: infra-gateway
+  main:
+    web-application-type: reactive
   config:
     import:
       - optional:configserver:discovery://config-server
@@ -68,7 +70,7 @@ management:
     resource-attributes:
       service.name: ${spring.application.name}
       service.namespace: streamix
-      deployment.environment: ${spring.profiles.active}
+      deployment.environment: ${spring.profiles.active:default}
     tracing:
       export:
         otlp:
