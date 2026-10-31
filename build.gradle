@@ -23,7 +23,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url = uri('https://maven.pkg.github.com/mzilin/streamix-platform-libs')
+        url = uri('https://maven.pkg.github.com/mzilin/streamix-libraries')
         credentials {
             username = project.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR')
             password = project.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN')

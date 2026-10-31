@@ -14,7 +14,7 @@ import reactor.core.publisher.Hooks;
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(WebFilter.class)
-public class StreamixReactiveObservabilityAutoConfiguration {
+public class ReactiveObservabilityAutoConfiguration {
 
     @PostConstruct
     public void enableContextPropagation() {

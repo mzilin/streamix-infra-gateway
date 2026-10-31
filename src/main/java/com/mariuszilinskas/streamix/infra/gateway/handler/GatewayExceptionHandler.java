@@ -1,4 +1,4 @@
-package com.mariuszilinskas.streamix.infra.gateway.handlers;
+package com.mariuszilinskas.streamix.infra.gateway.handler;
 
 import com.mariuszilinskas.streamix.web.response.error.ErrorResponse;
 import com.mariuszilinskas.streamix.infra.gateway.exception.JwtTokenValidationException;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @author Marius Zilinskas
  */
 @RestControllerAdvice
-public class AppExceptionHandler {
+public class GatewayExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AppExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GatewayExceptionHandler.class);
 
     @ExceptionHandler(JwtTokenValidationException.class)
     public ResponseEntity<ErrorResponse> handleJwtTokenValidationException(JwtTokenValidationException ex) {
@@ -34,7 +34,7 @@ public class AppExceptionHandler {
      * @return a ResponseEntity that includes the error response and the given HTTP status
      */
     private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
-        logger.error("Status: {}, Message: '{}'", status.value(), message);
+        logger.info("Status: {}, Message: '{}'", status.value(), message);
         ErrorResponse errorResponse = new ErrorResponse(message, status.value(), status.getReasonPhrase());
         return new ResponseEntity<>(errorResponse, status);
     }
