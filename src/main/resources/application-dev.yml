@@ -3,11 +3,3 @@ spring:
   config:
     import:
       - optional:file:../env/dev.properties
-
-# Local logging configuration
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.cloud.gateway: DEBUG
-    com.mariuszilinskas.streamix: DEBUG

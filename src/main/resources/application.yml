@@ -66,9 +66,12 @@ management:
     web:
       exposure:
         include: info, health, gateway, prometheus
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
   opentelemetry:
     resource-attributes:
-      service.name: ${spring.application.name}
       service.namespace: streamix
       deployment.environment: ${spring.profiles.active:default}
     tracing:
@@ -79,16 +82,16 @@ management:
       export:
         otlp:
           endpoint: http://localhost:4318/v1/logs
-  otlp:
-    metrics:
-      export:
-        url: http://localhost:4318/v1/metrics
+  tracing:
+    sampling:
+      probability: 1.0
 
-# Logging properties
+# Application logging configuration
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-    org.springframework.cloud.gateway: INFO
     com.mariuszilinskas.streamix: INFO
+    com.netflix: WARN
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.springframework.cloud.gateway: WARN
