@@ -2,7 +2,7 @@
 
 ![Build](https://img.shields.io/github/actions/workflow/status/mzilin/streamix-infra-gateway/build.yml?label=Build&logo=github&logoColor=white&style=flat)
 ![Coverage](https://img.shields.io/codecov/c/github/mzilin/streamix-infra-gateway?label=Coverage&logo=codecov&logoColor=white&style=flat)
-![Status](https://img.shields.io/badge/status-in_progress-yellow?label=Status)
+![Status](https://img.shields.io/badge/status-complete-brightgreen?label=Status)
 
 
 This repository contains the **API Gateway** microservice for the **Streamix** (Video Streaming Platform), deployed in the **Infrastructure** cluster. It serves as the entry point for all client requests and coordinates communication between backend services.
@@ -54,6 +54,7 @@ This project relies on a set of key libraries and frameworks that support its co
 
 - **Spring Boot**
   - **Actuator**: Exposes app health, metrics, and monitoring endpoints.
+  - **OpenTelemetry**: Enables distributed tracing, metrics and log export via OTLP.
   - **Webflux**: Supports building reactive REST APIs with Netty under the hood.
   - **Security**: Manages JWT-based authentication and route protection.
   - **Validation**: Provides declarative validation using JSR-380 annotations.
@@ -62,6 +63,10 @@ This project relies on a set of key libraries and frameworks that support its co
   - **Gateway**: Reactive API gateway for routing, filtering and load balancing incoming requests.
   - **Config Client**: Integrates with a centralised Spring Cloud Config Server for dynamic configuration management.
   - **Netflix Eureka Client**: Integrates with the Eureka Server for service registration and discovery.
+
+- **Streamix Platform**
+  - **streamix-observability**: Shared observability configuration for logging, tracing and metrics.
+  - **streamix-web-commons**: Shared web utilities and common response handling across services.
 
 - **Security**
   - **JJWT** `0.11.5`: Simplifies secure JWT creation, signing, and parsing.
@@ -138,7 +143,17 @@ Ensure you have the following installed on your machine:
 
 ### Environment Variables
 
-TBC
+The following environment variables must be set before running the service:
+
+| Variable               | Description                                  |
+|------------------------|----------------------------------------------|
+| `ACCESS_TOKEN_SECRET`  | Secret key used to verify JWT access tokens  |
+| `AUTH_CLUSTER_KEY`     | API key for the Auth cluster                 |
+| `USERS_CLUSTER_KEY`    | API key for the Users cluster                |
+| `MEDIA_CLUSTER_KEY`    | API key for the Media cluster                |
+| `DISCOVERY_CLUSTER_KEY`| API key for the Discovery cluster            |
+| `STREAMING_CLUSTER_KEY`| API key for the Streaming cluster            |
+| `BILLING_CLUSTER_KEY`  | API key for the Billing cluster              |
 
 
 ## Testing
