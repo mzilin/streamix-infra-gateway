@@ -11,6 +11,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Hooks;
 
+/**
+ * Autoconfigures reactive context propagation and registers StreamixLoggingWebFilter
+ * for observability.
+ */
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(WebFilter.class)

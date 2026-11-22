@@ -1,9 +1,9 @@
 package com.mariuszilinskas.streamix.infra.gateway.config;
 
 import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
+import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties.RouteDefinition;
 import com.mariuszilinskas.streamix.infra.gateway.properties.FrontendProperties;
 import com.mariuszilinskas.streamix.infra.gateway.properties.SecurityProperties;
-import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -13,12 +13,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
 
+import static com.mariuszilinskas.streamix.infra.gateway.constants.GatewayConstants.*;
+
+/**
+ * Configures gateway routes, path rewriting and API key injection.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class GatewayConfig {
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String RESPONSE_TIME_HEADER = "X-Response-Time";
 
     private final AppProperties appProps;
     private final SecurityProperties securityProperties;
@@ -43,8 +45,8 @@ public class GatewayConfig {
                 .uri(frontendProperties.baseUrl()));
     }
 
-    private void registerServiceRoute(RouteLocatorBuilder.Builder routes, AppProperties.RouteDefinition route) {
-        String prefix = AppUtils.API_PREFIX + "/" + route.path();
+    private void registerServiceRoute(RouteLocatorBuilder.Builder routes, RouteDefinition route) {
+        String prefix = API_PREFIX + "/" + route.path();
         String pathPattern = prefix + "/(?<segment>.*)";
         String apiKey = getClusterApiKey(route.cluster());
         String serviceUri = "lb://" + route.cluster() + "-" + route.service();
@@ -65,11 +67,15 @@ public class GatewayConfig {
         return apiKey;
     }
 
-    private GatewayFilterSpec applyServiceFilters(GatewayFilterSpec filters, String pathPattern, String apiKey) {
+    private GatewayFilterSpec applyServiceFilters(
+            GatewayFilterSpec filters,
+            String pathPattern,
+            String apiKey
+    ) {
         return filters
                 .rewritePath(pathPattern, "/${segment}")
-                .removeRequestHeader(AUTHORIZATION_HEADER)
-                .addRequestHeader(AUTHORIZATION_HEADER, apiKey)
+                .removeRequestHeader(API_KEY_HEADER)
+                .addRequestHeader(API_KEY_HEADER, apiKey)
                 .filter(responseTimeFilter());
     }
 

@@ -4,15 +4,19 @@ app:
       cluster: AUTH
       service: IDENTITY
 
-    - path: session
+    - path: accounts
+      cluster: AUTH
+      service: IDENTITY
+
+    - path: sessions
       cluster: AUTH
       service: SESSION
 
-    - path: account
+    - path: users
       cluster: USERS
       service: ACCOUNT
 
-    - path: profile
+    - path: profiles
       cluster: USERS
       service: PROFILE
 
@@ -20,7 +24,7 @@ app:
       cluster: USERS
       service: WATCHLIST
 
-    - path: catalog
+    - path: media
       cluster: MEDIA
       service: CATALOG
 

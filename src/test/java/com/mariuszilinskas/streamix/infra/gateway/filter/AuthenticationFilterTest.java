@@ -3,8 +3,6 @@ package com.mariuszilinskas.streamix.infra.gateway.filter;
 import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
 import com.mariuszilinskas.streamix.infra.gateway.service.JwtService;
-import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
-import com.mariuszilinskas.streamix.infra.gateway.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mariuszilinskas.streamix.observability.context.LogContext.USER_ID_HEADER;
+import static com.mariuszilinskas.streamix.infra.gateway.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -36,10 +36,8 @@ public class AuthenticationFilterTest {
 
     private AuthenticationFilter filter;
 
-    private static final String userId = TestUtils.userId.toString();
-
     private static final JwtPayload payload = new JwtPayload(
-            userId, List.of("USER", "ADMIN"), List.of("MANAGE_SETTINGS"), new Date()
+            TEST_USER_ID, List.of("USER", "ADMIN"), List.of("MANAGE_SETTINGS"), new Date()
     );
 
     @BeforeEach
@@ -107,13 +105,13 @@ public class AuthenticationFilterTest {
         filter.filter(exchange, chain).block();
 
         // Assert
-        assertEquals(userId, captor.getValue().getRequest().getHeaders().getFirst(AppUtils.USER_ID_HEADER));
+        assertEquals(TEST_USER_ID, captor.getValue().getRequest().getHeaders().getFirst(USER_ID_HEADER));
     }
 
     @Test
     void testFilter_ValidToken_NullRolesAndAuthorities_CallsChain() {
         // Arrange
-        JwtPayload nullPayload = new JwtPayload(userId, null, null, new Date());
+        JwtPayload nullPayload = new JwtPayload(TEST_USER_ID, null, null, new Date());
         MockServerWebExchange exchange = MockServerWebExchange.from(
                 MockServerHttpRequest.get("/users/profile").build()
         );

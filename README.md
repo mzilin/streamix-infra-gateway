@@ -104,7 +104,7 @@ Ensure you have the following installed on your machine:
     git clone https://github.com/mzilin/streamix-infra-gateway.git
     ```
 
-2. Switch to the `main` branch:
+2. Navigate into the project directory:
     ```bash
     cd streamix-infra-gateway
     ```
@@ -172,7 +172,7 @@ This setup ensures that changes can be safely verified and that the codebase rem
 
 This project uses **GitHub Actions** to automate the build, test and deployment processes, ensuring continuous integration and delivery.
 
-- The **Build** workflow runs on every push and pull request to the `main` and `prod` branches. This step verifies that all commits compile successfully and pass unit tests before they are merged, maintaining code quality.
+- The **Build** workflow runs on every push and pull request to the `main` branch. This step verifies that all commits compile successfully and pass unit tests before they are merged, maintaining code quality.
 - The **Codecov** workflow runs on pushes to the main branch, where it executes tests, generates a Jacoco coverage report and uploads the results to Codecov.
 - Finally, a **Deploy** workflow is triggered when a pull request is merged into the `prod` branch. It builds a Docker image of the microservice, pushes it to the **AWS ECR** container registry and deploys it to the **AWS ECS** environment.
 
