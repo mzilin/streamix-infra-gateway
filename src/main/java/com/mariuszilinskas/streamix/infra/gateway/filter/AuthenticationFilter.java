@@ -3,7 +3,6 @@ package com.mariuszilinskas.streamix.infra.gateway.filter;
 import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
 import com.mariuszilinskas.streamix.infra.gateway.service.JwtService;
-import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
@@ -23,6 +22,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.*;
 import java.util.stream.Stream;
+
+import static com.mariuszilinskas.streamix.observability.context.LogContext.*;
 
 /**
  * Validates the JWT access token on each incoming request and populates the reactive security context.
@@ -57,16 +58,16 @@ public class AuthenticationFilter implements WebFilter {
         logger.info("Set security context {}", payload);
 
         ServerWebExchange mutatedExchange = exchange.mutate()
-                .request(r -> r.headers(h -> h.set(AppUtils.USER_ID_HEADER, userId)))
+                .request(r -> r.headers(h -> h.set(USER_ID_HEADER, userId)))
                 .build();
 
         return chain.filter(mutatedExchange)
                 .contextWrite(ctx -> {
                     Map<String, String> merged = new HashMap<>(
-                            Objects.requireNonNull(ctx.getOrDefault(AppUtils.MDC_CONTEXT_KEY, Map.of()))
+                            Objects.requireNonNull(ctx.getOrDefault(MDC_CONTEXT_KEY, Map.of()))
                     );
-                    merged.put(AppUtils.MDC_USER_ID, userId);
-                    return ctx.put(AppUtils.MDC_CONTEXT_KEY, merged);
+                    merged.put(MDC_USER_ID, userId);
+                    return ctx.put(MDC_CONTEXT_KEY, merged);
                 })
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
     }
