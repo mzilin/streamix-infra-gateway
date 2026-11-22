@@ -3,7 +3,6 @@ package com.mariuszilinskas.streamix.infra.gateway.service;
 import com.mariuszilinskas.streamix.infra.gateway.properties.SecurityProperties;
 import com.mariuszilinskas.streamix.infra.gateway.exception.JwtTokenValidationException;
 import com.mariuszilinskas.streamix.infra.gateway.dto.JwtPayload;
-import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.mariuszilinskas.streamix.infra.gateway.constants.GatewayConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +52,7 @@ public class JwtServiceImpl implements JwtService {
     public String extractAccessToken(ServerWebExchange exchange) {
         return exchange.getRequest()
                 .getCookies()
-                .getOrDefault(AppUtils.ACCESS_TOKEN_NAME, Collections.emptyList())
+                .getOrDefault(ACCESS_TOKEN_NAME, Collections.emptyList())
                 .stream()
                 .findFirst()
                 .map(HttpCookie::getValue)
