@@ -17,6 +17,10 @@ import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configures the reactive security filter chain, including CORS, public path rules,
+ * and admin-only path restrictions.
+ */
 @Configuration
 @EnableMethodSecurity
 @EnableWebFluxSecurity

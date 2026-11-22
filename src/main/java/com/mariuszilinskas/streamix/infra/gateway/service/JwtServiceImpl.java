@@ -21,11 +21,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Service implementation for managing JWT tokens.
- *
- * @author Marius Zilinskas
- */
 @Service
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {

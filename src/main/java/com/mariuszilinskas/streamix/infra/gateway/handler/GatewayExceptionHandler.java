@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * This class is a global exception handler that handles exceptions thrown across the whole application.
- *
- * @author Marius Zilinskas
+ * Translates gateway-level exceptions into structured HTTP error responses.
  */
 @RestControllerAdvice
 public class GatewayExceptionHandler {
@@ -26,17 +24,10 @@ public class GatewayExceptionHandler {
 
     // -----------------------------------------------------------
 
-    /**
-     * This method builds the error response for a given exception.
-     *
-     * @param message the exception message
-     * @param status the HTTP status
-     * @return a ResponseEntity that includes the error response and the given HTTP status
-     */
     private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
         logger.info("Status: {}, Message: '{}'", status.value(), message);
         ErrorResponse errorResponse = new ErrorResponse(message, status.value(), status.getReasonPhrase());
-        return new ResponseEntity<>(errorResponse, status);
+        return ResponseEntity.status(status).body(errorResponse);
     }
 
 }

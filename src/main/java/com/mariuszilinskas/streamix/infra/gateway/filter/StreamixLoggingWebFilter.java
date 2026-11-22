@@ -12,6 +12,10 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Assigns a correlation ID to every request and seeds the reactive MDC context with service
+ * and environment metadata.
+ */
 public final class StreamixLoggingWebFilter implements WebFilter, Ordered {
 
     private final String serviceName;

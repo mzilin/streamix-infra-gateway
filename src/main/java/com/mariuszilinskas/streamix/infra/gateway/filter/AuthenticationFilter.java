@@ -24,6 +24,9 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * Validates the JWT access token on each incoming request and populates the reactive security context.
+ */
 @NullMarked
 @Component
 @RequiredArgsConstructor

@@ -4,6 +4,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
+/**
+ * Binds application-level configuration, route definitions and security path classifications.
+ */
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(
         List<RouteDefinition> routes,
