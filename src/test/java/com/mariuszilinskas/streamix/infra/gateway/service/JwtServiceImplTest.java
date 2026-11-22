@@ -5,8 +5,6 @@ import com.mariuszilinskas.streamix.infra.gateway.enums.UserAuthority;
 import com.mariuszilinskas.streamix.infra.gateway.enums.UserRole;
 import com.mariuszilinskas.streamix.infra.gateway.exception.JwtTokenValidationException;
 import com.mariuszilinskas.streamix.infra.gateway.properties.SecurityProperties;
-import com.mariuszilinskas.streamix.infra.gateway.util.AppUtils;
-import com.mariuszilinskas.streamix.infra.gateway.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
+import static com.mariuszilinskas.streamix.infra.gateway.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -41,20 +39,17 @@ public class JwtServiceImplTest {
 
     private JwtServiceImpl jwtService;
 
-    private static final String secretKey = TestUtils.secretKey;
-    private static final UUID userId = TestUtils.userId;
-    private static final String validAccessToken = TestUtils.validAccessToken;
     private static MultiValueMap<String, HttpCookie> cookies;
 
     // ------------------------------------
 
     @BeforeEach
     void setup() {
-        SecurityProperties securityProperties = new SecurityProperties(secretKey, Map.of());
+        SecurityProperties securityProperties = new SecurityProperties(TEST_SECRET_KEY, Map.of());
         jwtService = new JwtServiceImpl(securityProperties);
 
         cookies = new LinkedMultiValueMap<>();
-        cookies.add(AppUtils.ACCESS_TOKEN_NAME, httpCookie);
+        cookies.add(TEST_ACCESS_TOKEN_NAME, httpCookie);
     }
 
     // ------------------------------------
@@ -64,7 +59,7 @@ public class JwtServiceImplTest {
         // Arrange
         when(exchange.getRequest()).thenReturn(request);
         when(request.getCookies()).thenReturn(cookies);
-        when(httpCookie.getValue()).thenReturn(validAccessToken);
+        when(httpCookie.getValue()).thenReturn(TEST_ACCESS_TOKEN);
 
         // Act
         Optional<JwtPayload> response = jwtService.extractPayload(exchange);
@@ -72,7 +67,7 @@ public class JwtServiceImplTest {
         // Assert
         assertTrue(response.isPresent());
         JwtPayload payload = response.get();
-        assertEquals(userId.toString(), payload.userId());
+        assertEquals(TEST_USER_ID, payload.userId());
         assertEquals(List.of(UserRole.USER.name(), UserRole.ADMIN.name()), payload.roles());
         assertEquals(List.of(UserAuthority.MANAGE_SETTINGS.name()), payload.authorities());
         assertEquals(new Date(3295380670000L), payload.expiry());
@@ -115,14 +110,14 @@ public class JwtServiceImplTest {
         // Arrange
         when(exchange.getRequest()).thenReturn(request);
         when(request.getCookies()).thenReturn(cookies);
-        when(httpCookie.getValue()).thenReturn(validAccessToken);
+        when(httpCookie.getValue()).thenReturn(TEST_ACCESS_TOKEN);
 
         // Act
         String response = jwtService.extractAccessToken(exchange);
 
         // Assert
         assertNotNull(response);
-        assertEquals(validAccessToken, response);
+        assertEquals(TEST_ACCESS_TOKEN, response);
     }
 
     @Test
