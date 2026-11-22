@@ -2,7 +2,6 @@ package com.mariuszilinskas.streamix.infra.gateway.config;
 
 import com.mariuszilinskas.streamix.infra.gateway.enums.UserRole;
 import com.mariuszilinskas.streamix.infra.gateway.filter.AuthenticationFilter;
-import com.mariuszilinskas.streamix.infra.gateway.filter.UserIdFilter;
 import com.mariuszilinskas.streamix.infra.gateway.properties.AppProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +28,6 @@ public class SecurityConfig {
 
     private final CorsConfigurationSource corsConfigurationSource;
     private final AuthenticationFilter authenticationFilter;
-    private final UserIdFilter userIdFilter;
     private final AppProperties appProperties;
 
     @Bean
@@ -39,7 +37,6 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(this::configureAuthorization)
                 .addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                .addFilterAfter(userIdFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 
